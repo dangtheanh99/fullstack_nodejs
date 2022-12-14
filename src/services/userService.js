@@ -1,41 +1,41 @@
-import db from '../models/index';
-import bcrypt from 'bcryptjs';
+import db from "../models/index";
+import bcrypt from "bcryptjs";
 
-let handleUserLoogin = (email, password) => {
+let handleUserLogin = (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
       let userData = {};
       let isExist = await checkUserEmail(email);
       if (isExist) {
         // user exist
-        // compare password
         let user = await db.User.findOne({
           where: { email: email },
-          attributes: ['email', 'roleId', 'password'],
+          attributes: ["email", "roleId", "password"],
           raw: true,
         });
         if (user) {
-          let check = await bcrypt.compareSync(password, user.password);
+          // compare password
+          let check = bcrypt.compareSync(password, user.password);
+          console.log("check: ", check);
           if (check) {
             userData.errCode = 0;
-            userData.errMessage = 'OK';
+            userData.errMessage = "OK";
 
             delete user.password;
             userData.user = user;
           } else {
             userData.errCode = 3;
-            userData.errMessage = 'Wrong password';
+            userData.errMessage = "Wrong password";
           }
         } else {
           userData.errCode = 2;
           userData.errMessage = `User not found!`;
         }
       } else {
-        // return error
         userData.errCode = 1;
         userData.errMessage = `Your email doesn't exist in the system. Please try other email!`;
-        resolve(userData);
       }
+      resolve(userData);
     } catch (e) {
       reject(e);
     }
@@ -62,5 +62,5 @@ let checkUserEmail = (userEmail) => {
 };
 
 module.exports = {
-  handleUserLoogin,
+  handleUserLogin,
 };
