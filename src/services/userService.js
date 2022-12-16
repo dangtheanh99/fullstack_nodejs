@@ -16,7 +16,6 @@ let handleUserLogin = (email, password) => {
         if (user) {
           // compare password
           let check = bcrypt.compareSync(password, user.password);
-          console.log("check: ", check);
           if (check) {
             userData.errCode = 0;
             userData.errMessage = "OK";
@@ -61,6 +60,35 @@ let checkUserEmail = (userEmail) => {
   });
 };
 
+let getAllUsers = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let users = "";
+      if (userId === "ALL") {
+        users = await db.User.findAll({
+          attributes: {
+            exclude: ["password"],
+          },
+        });
+      } else if (userId && userId !== "ALL") {
+        users = await db.User.findOne({
+          where: {
+            id: userId,
+          },
+          attributes: {
+            exclude: ["password"],
+          },
+          raw: true,
+        });
+      }
+      resolve(users);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   handleUserLogin,
+  getAllUsers,
 };
