@@ -21,7 +21,7 @@ let handleUserLogin = (email, password) => {
         // user exist
         let user = await db.User.findOne({
           where: { email: email },
-          attributes: ["email", "roleId", "password"],
+          attributes: ["email", "roleId", "password", "firstName", "lastName"],
           raw: true,
         });
         if (user) {
@@ -188,10 +188,36 @@ let updateUser = (data) => {
   });
 };
 
+let getAllCodeService = (typeInput) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (typeInput) {
+        let res = {};
+        let allcode = await db.Allcode.findAll({
+          where: {
+            type: typeInput,
+          },
+        });
+        res.errCode = 0;
+        res.data = allcode;
+        resolve(res);
+      } else {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter!",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   handleUserLogin,
   getAllUsers,
   createNewUser,
   deleteUser,
   updateUser,
+  getAllCodeService,
 };
