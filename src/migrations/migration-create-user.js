@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       gender: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
       },
       roleId: {
         type: Sequelize.STRING,
@@ -52,3 +52,5 @@ module.exports = {
     await queryInterface.dropTable("Users");
   },
 };
+
+// npx sequelize-cli db:migrate --to migration-create-user.js

@@ -118,8 +118,10 @@ let createNewUser = (data) => {
           lastName: data.lastName,
           address: data.address,
           phoneNumber: data.phoneNumber,
-          gender: data.gender === "1" ? true : false,
+          gender: data.gender,
           roleId: data.roleId,
+          positionId: data.positionId,
+          image: data.image,
         });
         resolve({
           errCode: 0,
@@ -156,7 +158,7 @@ let deleteUser = (userId) => {
 let updateUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.id) {
+      if (!data.id || !data.gender || !data.roleId || !data.positionId) {
         resolve({
           errCode: 2,
           errMessage: "Missing required parameter!",
@@ -171,6 +173,13 @@ let updateUser = (data) => {
         user.firstName = data.firstName;
         user.lastName = data.lastName;
         user.address = data.address;
+        user.phoneNumber = data.phoneNumber;
+        user.gender = data.gender;
+        user.roleId = data.roleId;
+        user.positionId = data.positionId;
+        if (data.image) {
+          user.image = data.image;
+        }
         await user.save();
         resolve({
           errCode: 0,
