@@ -19,13 +19,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       contentHTML: {
-        type: Sequelize.TEXT,
+        allowNull: false,
+        type: Sequelize.TEXT("long"),
       },
       contentMarkdown: {
-        type: Sequelize.TEXT,
+        allowNull: false,
+        type: Sequelize.TEXT("long"),
       },
       description: {
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT("long"),
       },
       createdAt: {
         allowNull: false,
