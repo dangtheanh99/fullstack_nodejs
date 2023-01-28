@@ -43,8 +43,24 @@ let saveInfoDoctor = async (req, res) => {
   }
 };
 
+let getDetailDoctor = async (req, res) => {
+  try {
+    let detailDoctor = await doctorService.saveDetailDoctorService(
+      req.query.id
+    );
+    return res.status(200).json(detailDoctor);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Error from server",
+    });
+  }
+};
+
 module.exports = {
   getTopDoctorHome,
   getAllDoctors,
   saveInfoDoctor,
+  getDetailDoctor,
 };
