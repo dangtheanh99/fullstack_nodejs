@@ -1,4 +1,5 @@
 import db from "../models/index";
+import _ from "lodash";
 require("dotenv").config();
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
@@ -153,16 +154,42 @@ let saveDetailDoctorService = (inputId) => {
 let bulkCreateScheduleService = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.arrSchedule) {
+      if (!data.arrSchedule || !data.doctorId || !data.date) {
         resolve({
           errCode: 1,
           message: "Missing required parameter!",
         });
       } else {
         let schedule = data.arrSchedule;
-        console.log("check data: ", schedule);
-        console.log("check type data", typeof schedule);
-        resolve("");
+        if (schedule && schedule.length > 0) {
+          schedule = schedule.map((item) => {
+            item.maxNumber = MAX_NUMBER_SCHEDULE;
+            return item;
+          });
+        }
+        console.log("check schedule", schedule);
+        // get all existing data
+        let existing = await db.Schedule.findAll({
+          where: {
+            doctorId: data.doctorId,
+            date: data.date,
+          },
+          attributes: ["timeType", "date", "doctorId", "maxNumber"],
+          raw: true,
+        });
+
+        // compare diff
+        let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+          return a.timeType === b.timeType && a.date === b.date;
+        });
+
+        if (toCreate && toCreate.length > 0) {
+          await db.Schedule.bulkCreate(toCreate);
+        }
+        resolve({
+          errCode: 0,
+          message: "Ok",
+        });
       }
     } catch (e) {
       reject(e);
