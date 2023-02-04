@@ -1,4 +1,4 @@
-import doctorService from "../services/doctorService";
+import doctorService from '../services/doctorService';
 
 let getTopDoctorHome = async (req, res) => {
   let limit = req.query.limit;
@@ -12,7 +12,7 @@ let getTopDoctorHome = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server",
+      message: 'Error from server',
     });
   }
 };
@@ -25,7 +25,7 @@ let getAllDoctors = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server",
+      message: 'Error from server',
     });
   }
 };
@@ -38,7 +38,7 @@ let saveInfoDoctor = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server",
+      message: 'Error from server',
     });
   }
 };
@@ -53,7 +53,7 @@ let getDetailDoctor = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server",
+      message: 'Error from server',
     });
   }
 };
@@ -66,7 +66,23 @@ let bulkCreateSchedule = async (req, res) => {
     console.log(e);
     return res.status(200).json({
       errCode: -1,
-      message: "Error from server",
+      message: 'Error from server',
+    });
+  }
+};
+
+let getScheduleByDate = async (req, res) => {
+  try {
+    let info = await doctorService.getScheduleByDateService(
+      req.query.doctorId,
+      req.query.date
+    );
+    return res.status(200).json(info);
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      message: 'Error from server',
     });
   }
 };
@@ -77,4 +93,5 @@ module.exports = {
   saveInfoDoctor,
   getDetailDoctor,
   bulkCreateSchedule,
+  getScheduleByDate,
 };
