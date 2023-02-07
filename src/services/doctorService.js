@@ -65,7 +65,13 @@ let saveInfoDoctorService = (inputData) => {
         !inputData.doctorId ||
         !inputData.contentHTML ||
         !inputData.contentMarkdown ||
-        !inputData.action
+        !inputData.action ||
+        !inputData.priceId ||
+        !inputData.paymentId ||
+        !inputData.provinceId ||
+        !inputData.nameClinic ||
+        !inputData.addressClinic ||
+        !inputData.note
       ) {
         resolve({
           errCode: 1,
@@ -93,6 +99,40 @@ let saveInfoDoctorService = (inputData) => {
             await doctorMarkdown.save();
           }
         }
+        // priceId: this.state.selectedPrice.value,
+        // paymentId: this.state.selectedPayment.value,
+        // provinceId: this.state.selectedProvince.value,
+        // nameClinic: this.state.clinicName,
+        // addressClinic: this.state.clinicAddress,
+        // note: this.state.note,
+
+        let doctorInfor = await db.Doctor_infor.findOne({
+          where: {
+            doctorId: inputData.doctorId,
+          },
+          raw: false,
+        });
+        if (doctorInfor) {
+          doctorInfor.doctorId = inputData.doctorId;
+          doctorInfor.priceId = inputData.priceId;
+          doctorInfor.paymentId = inputData.paymentId;
+          doctorInfor.provinceId = inputData.provinceId;
+          doctorInfor.nameClinic = inputData.nameClinic;
+          doctorInfor.addressClinic = inputData.addressClinic;
+          doctorInfor.note = inputData.note;
+          await doctorInfor.save();
+        } else {
+          await db.Doctor_infor.create({
+            doctorId: inputData.doctorId,
+            priceId: inputData.priceId,
+            paymentId: inputData.paymentId,
+            provinceId: inputData.provinceId,
+            nameClinic: inputData.nameClinic,
+            addressClinic: inputData.addressClinic,
+            note: inputData.note,
+          });
+        }
+
         resolve({
           errCode: 0,
           message: "Save info doctor succeed!",
