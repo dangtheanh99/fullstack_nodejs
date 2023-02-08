@@ -12,13 +12,13 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       priceId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       provinceId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       paymentId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       addressClinic: {
         type: Sequelize.STRING,

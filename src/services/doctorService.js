@@ -61,6 +61,7 @@ let getAllDoctorsService = () => {
 let saveInfoDoctorService = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log("inputData", inputData);
       if (
         !inputData.doctorId ||
         !inputData.contentHTML ||
@@ -112,6 +113,7 @@ let saveInfoDoctorService = (inputData) => {
           },
           raw: false,
         });
+        console.log("doctorInfor", doctorInfor);
         if (doctorInfor) {
           doctorInfor.doctorId = inputData.doctorId;
           doctorInfor.priceId = inputData.priceId;
@@ -145,7 +147,7 @@ let saveInfoDoctorService = (inputData) => {
   });
 };
 
-let saveDetailDoctorService = (inputId) => {
+let getDetailDoctorService = (inputId) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!inputId) {
@@ -170,6 +172,29 @@ let saveDetailDoctorService = (inputId) => {
               model: db.Allcode,
               as: "positionData",
               attributes: ["valueVi", "valueEn"],
+            },
+            {
+              model: db.Doctor_infor,
+              attributes: {
+                exclude: ["id", "doctorId"],
+              },
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "priceData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "provinceData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "paymentData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+              ],
             },
           ],
           raw: false,
@@ -278,7 +303,7 @@ module.exports = {
   getTopDoctor,
   getAllDoctorsService,
   saveInfoDoctorService,
-  saveDetailDoctorService,
+  getDetailDoctorService,
   bulkCreateScheduleService,
   getScheduleByDateService,
 };
