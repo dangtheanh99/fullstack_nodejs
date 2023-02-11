@@ -346,6 +346,76 @@ let getExtraInforDoctorService = (doctorId) => {
     }
   });
 };
+
+let getProfileDoctorByIdService = (doctorId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!doctorId) {
+        resolve({
+          errCode: 1,
+          message: "Missing required parameter!",
+        });
+      } else {
+        let data = await db.User.findOne({
+          where: {
+            id: doctorId,
+          },
+          attributes: {
+            exclude: ["password"],
+          },
+          include: [
+            {
+              model: db.Markdown,
+              attributes: ["description"],
+            },
+            {
+              model: db.Allcode,
+              as: "positionData",
+              attributes: ["valueVi", "valueEn"],
+            },
+            {
+              model: db.Doctor_infor,
+              attributes: {
+                exclude: ["id", "doctorId"],
+              },
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "priceData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "provinceData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "paymentData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+              ],
+            },
+          ],
+          raw: false,
+          nest: true,
+        });
+        if (data && data.image) {
+          data.image = new Buffer(data.image, "base64").toString("binary");
+        }
+
+        if (!data) data = {};
+        resolve({
+          errCode: 0,
+          data: data,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   getTopDoctor,
   getAllDoctorsService,
@@ -354,4 +424,5 @@ module.exports = {
   bulkCreateScheduleService,
   getScheduleByDateService,
   getExtraInforDoctorService,
+  getProfileDoctorByIdService,
 };
