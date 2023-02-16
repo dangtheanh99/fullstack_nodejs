@@ -17,7 +17,10 @@ module.exports = {
       image: {
         type: Sequelize.BLOB("long"),
       },
-      name: {
+      nameVi: {
+        type: Sequelize.STRING,
+      },
+      nameEn: {
         type: Sequelize.STRING,
       },
       createdAt: {
