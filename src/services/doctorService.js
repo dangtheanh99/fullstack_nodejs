@@ -58,25 +58,43 @@ let getAllDoctorsService = () => {
   });
 };
 
+let checkRequiredFields = (inputData) => {
+  let arr = [
+    "doctorId",
+    "contentHTML",
+    "contentMarkdown",
+    "action",
+    "priceId",
+    "paymentId",
+    "provinceId",
+    "nameClinic",
+    "addressClinic",
+    "note",
+    "specialtyId",
+  ];
+  let isValid = true;
+  let property = "";
+  for (let i = 0; i < arr.length; i++) {
+    if (!inputData[arr[i]]) {
+      isValid = false;
+      property = arr[i];
+      break;
+    }
+  }
+  return {
+    isValid,
+    property,
+  };
+};
+
 let saveInfoDoctorService = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log("inputData", inputData);
-      if (
-        !inputData.doctorId ||
-        !inputData.contentHTML ||
-        !inputData.contentMarkdown ||
-        !inputData.action ||
-        !inputData.priceId ||
-        !inputData.paymentId ||
-        !inputData.provinceId ||
-        !inputData.nameClinic ||
-        !inputData.addressClinic ||
-        !inputData.note
-      ) {
+      let checkInputData = checkRequiredFields(inputData);
+      if (!checkInputData.isValid) {
         resolve({
           errCode: 1,
-          message: "Missing parameter!",
+          message: `Missing parameter: ${checkInputData.property}!`,
         });
       } else {
         if (inputData.action === "CREATE") {
@@ -100,20 +118,12 @@ let saveInfoDoctorService = (inputData) => {
             await doctorMarkdown.save();
           }
         }
-        // priceId: this.state.selectedPrice.value,
-        // paymentId: this.state.selectedPayment.value,
-        // provinceId: this.state.selectedProvince.value,
-        // nameClinic: this.state.clinicName,
-        // addressClinic: this.state.clinicAddress,
-        // note: this.state.note,
-
         let doctorInfor = await db.Doctor_infor.findOne({
           where: {
             doctorId: inputData.doctorId,
           },
           raw: false,
         });
-        console.log("doctorInfor", doctorInfor);
         if (doctorInfor) {
           doctorInfor.doctorId = inputData.doctorId;
           doctorInfor.priceId = inputData.priceId;
@@ -122,6 +132,7 @@ let saveInfoDoctorService = (inputData) => {
           doctorInfor.nameClinic = inputData.nameClinic;
           doctorInfor.addressClinic = inputData.addressClinic;
           doctorInfor.note = inputData.note;
+          doctorInfor.specialtyId = inputData.specialtyId;
           await doctorInfor.save();
         } else {
           await db.Doctor_infor.create({
@@ -132,6 +143,7 @@ let saveInfoDoctorService = (inputData) => {
             nameClinic: inputData.nameClinic,
             addressClinic: inputData.addressClinic,
             note: inputData.note,
+            specialtyId: inputData.specialtyId,
           });
         }
 
