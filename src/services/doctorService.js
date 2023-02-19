@@ -436,6 +436,65 @@ let getProfileDoctorByIdService = (doctorId) => {
   });
 };
 
+let getListPatientService = (doctorId, date) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!doctorId || !date) {
+        resolve({
+          errCode: 1,
+          message: "Missing required parameter!",
+        });
+      } else {
+        let data = await db.Booking.findAll({
+          where: {
+            statusId: "S2",
+            doctorId: doctorId,
+            date: date,
+          },
+
+          // attributes: {
+          //   exclude: ["id", "doctorId"],
+          // },
+          include: [
+            {
+              model: db.User,
+              as: "patientData",
+              attributes: [
+                "email",
+                "firstName",
+                "address",
+                "gender",
+                "phoneNumber",
+              ],
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "genderData",
+                  attributes: ["valueVi", "valueEn"],
+                },
+              ],
+            },
+            {
+              model: db.Allcode,
+              as: "timeTypePatient",
+              attributes: ["valueVi", "valueEn"],
+            },
+          ],
+          raw: false,
+          nest: true,
+        });
+        resolve({
+          errCode: 0,
+          message: "OK",
+          data: data,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   getTopDoctor,
   getAllDoctorsService,
@@ -445,4 +504,5 @@ module.exports = {
   getScheduleByDateService,
   getExtraInforDoctorService,
   getProfileDoctorByIdService,
+  getListPatientService,
 };
