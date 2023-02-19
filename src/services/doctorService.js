@@ -71,6 +71,7 @@ let checkRequiredFields = (inputData) => {
     "addressClinic",
     "note",
     "specialtyId",
+    "clinicId",
   ];
   let isValid = true;
   let property = "";
@@ -133,6 +134,7 @@ let saveInfoDoctorService = (inputData) => {
           doctorInfor.addressClinic = inputData.addressClinic;
           doctorInfor.note = inputData.note;
           doctorInfor.specialtyId = inputData.specialtyId;
+          doctorInfor.clinicId = inputData.clinicId;
           await doctorInfor.save();
         } else {
           await db.Doctor_infor.create({
@@ -144,6 +146,7 @@ let saveInfoDoctorService = (inputData) => {
             addressClinic: inputData.addressClinic,
             note: inputData.note,
             specialtyId: inputData.specialtyId,
+            clinicId: inputData.clinicId,
           });
         }
 
