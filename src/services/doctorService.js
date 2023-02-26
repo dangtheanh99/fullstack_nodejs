@@ -11,7 +11,7 @@ let getTopDoctor = (limitInput) => {
       let users = await db.User.findAll({
         limit: limitInput,
         where: { roleId: "R2" },
-        order: [["createdAt", "DESC"]],
+        // order: [["createdAt", "DESC"]],
         attributes: {
           exclude: ["password"],
         },
@@ -43,15 +43,21 @@ let getTopDoctor = (limitInput) => {
 let getAllDoctorsService = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let doctors = await db.User.findAll({
+      let data = await db.User.findAll({
         where: { roleId: "R2" },
         attributes: {
-          exclude: ["password", "image"],
+          exclude: ["password"],
         },
       });
+      if (data && data.length > 0) {
+        data.map((item) => {
+          item.image = new Buffer(item.image, "base64").toString("binary");
+          return item;
+        });
+      }
       resolve({
         errCode: 0,
-        data: doctors,
+        data: data,
       });
     } catch (e) {
       reject(e);
