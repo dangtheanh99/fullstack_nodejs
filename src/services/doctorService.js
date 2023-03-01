@@ -4,7 +4,7 @@ import { resolve } from "path";
 import emailService from "./emailService";
 require("dotenv").config();
 
-const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
+// const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let getTopDoctor = (limitInput) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -249,12 +249,12 @@ let bulkCreateScheduleService = (data) => {
         });
       } else {
         let schedule = data.arrSchedule;
-        if (schedule && schedule.length > 0) {
-          schedule = schedule.map((item) => {
-            item.maxNumber = MAX_NUMBER_SCHEDULE;
-            return item;
-          });
-        }
+        // if (schedule && schedule.length > 0) {
+        //   schedule = schedule.map((item) => {
+        //     item.maxNumber = MAX_NUMBER_SCHEDULE;
+        //     return item;
+        //   });
+        // }
         console.log("check schedule", schedule);
         // get all existing data
         let existing = await db.Schedule.findAll({
@@ -262,7 +262,7 @@ let bulkCreateScheduleService = (data) => {
             doctorId: data.doctorId,
             date: data.date,
           },
-          attributes: ["timeType", "date", "doctorId", "maxNumber"],
+          attributes: ["timeType", "date", "doctorId"],
           raw: true,
         });
 
