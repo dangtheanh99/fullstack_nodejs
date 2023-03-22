@@ -19,7 +19,8 @@ let postBookAppointmentService = (data) => {
         !data.fullName ||
         !data.selectedGender ||
         !data.address ||
-        !data.phoneNumber
+        !data.phoneNumber ||
+        !data.reason
       ) {
         resolve({
           errCode: 1,
@@ -34,6 +35,7 @@ let postBookAppointmentService = (data) => {
           time: data.timeText,
           language: data.language,
           link: builUrlEmail(data.doctorId, token),
+          reason: data.reason,
         });
         // upsert patient
         let user = await db.User.findOrCreate({

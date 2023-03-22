@@ -26,6 +26,17 @@ let getTopDoctor = (limitInput) => {
             as: "genderData",
             attributes: ["valueVi", "valueEn"],
           },
+          {
+            model: db.Doctor_infor,
+            attributes: ["specialtyId"],
+            include: [
+              {
+                model: db.Specialty,
+                as: "specialtyData",
+                attributes: ["nameVi", "nameEn"],
+              },
+            ],
+          },
         ],
         raw: true,
         nest: true,
@@ -255,7 +266,7 @@ let bulkCreateScheduleService = (data) => {
         //     return item;
         //   });
         // }
-        console.log("check schedule", schedule);
+        // console.log("check schedule", schedule);
         // get all existing data
         let existing = await db.Schedule.findAll({
           where: {
