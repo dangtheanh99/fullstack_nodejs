@@ -78,7 +78,7 @@ let sendAttachment = async (dataSend) => {
     html: getBodyHTMLEmailRemedy(dataSend),
     attachments: {
       // encoded string as an attachment
-      filename: `${dataSend.patientName}-${dataSend.timeType}.text`,
+      filename: `${dataSend.patientName}-${dataSend.timeType}.png`,
       content: dataSend.imageBase64.split("base64,")[1],
       encoding: "base64",
     },
